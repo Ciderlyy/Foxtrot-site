@@ -5,6 +5,16 @@ import Link from 'next/link'
 export default function Resources() {
   const resourceCategories = [
     {
+      title: "Duty & Operations",
+      description: "Essential duty schedules, operational procedures, and guard assignments",
+      resources: [
+        { name: "Duty List for COS and Guard Duty", url: "https://docs.google.com/spreadsheets/d/1-8emNSiPm53TbuAiMaiOqd5OLdtYDGL32K9iTI2AbpM/edit?gid=464717631#gid=464717631", icon: "📋" },
+        { name: "Standard Operating Procedures", url: "#", icon: "📝" },
+        { name: "Duty Rotation Schedule", url: "#", icon: "🔄" },
+        { name: "Guard Post Instructions", url: "#", icon: "🛡️" },
+      ]
+    },
+    {
       title: "Company Documents",
       description: "Access to all internal company documents, policies, and procedures",
       resources: [
@@ -22,16 +32,6 @@ export default function Resources() {
         { name: "Skill Assessments", url: "#", icon: "📊" },
         { name: "Certification Programs", url: "#", icon: "🏆" },
         { name: "Knowledge Base", url: "#", icon: "📚" },
-      ]
-    },
-    {
-      title: "Project Resources",
-      description: "Project management tools and documentation",
-      resources: [
-        { name: "Project Dashboard", url: "#", icon: "📈" },
-        { name: "Resource Library", url: "#", icon: "📁" },
-        { name: "Templates", url: "#", icon: "📝" },
-        { name: "Best Practices", url: "#", icon: "⭐" },
       ]
     },
     {

@@ -5,6 +5,16 @@ import Link from 'next/link'
 export default function Tools() {
   const toolCategories = [
     {
+      title: "Operational Tools",
+      description: "Specialized tools for operational management and tracking",
+      tools: [
+        { name: "SOFUN Tracker", description: "Track SOFUN for S3 operations", url: "https://ciderlyy.github.io/SOFUN-Tracker", icon: "🎯", status: "active" },
+        { name: "Parade State Automation", description: "Automated parade state management system with personnel database and daily reporting", url: "/parade-state", icon: "⚡", status: "active" },
+        { name: "Duty Management", description: "Manage duty assignments and schedules", url: "#", icon: "📋", status: "active" },
+        { name: "Resource Allocation", description: "Track and allocate operational resources", url: "#", icon: "📊", status: "active" },
+      ]
+    },
+    {
       title: "Productivity Tools",
       description: "Essential tools for daily productivity and task management",
       tools: [
@@ -52,16 +62,6 @@ export default function Tools() {
         { name: "Security Monitoring", description: "Real-time security alerts and monitoring", url: "#", icon: "🛡️", status: "active" },
         { name: "VPN Access", description: "Secure remote access to company resources", url: "#", icon: "🔒", status: "active" },
         { name: "Audit Logs", description: "System access and activity tracking", url: "#", icon: "📋", status: "active" },
-      ]
-    },
-    {
-      title: "Customer Tools",
-      description: "Customer relationship and support tools",
-      tools: [
-        { name: "CRM System", description: "Customer relationship management", url: "#", icon: "👥", status: "active" },
-        { name: "Support Portal", description: "Customer support and ticketing", url: "#", icon: "🎧", status: "active" },
-        { name: "Knowledge Base", description: "Self-service customer resources", url: "#", icon: "📖", status: "active" },
-        { name: "Feedback System", description: "Collect and manage customer feedback", url: "#", icon: "💭", status: "beta" },
       ]
     }
   ]
