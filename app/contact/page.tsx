@@ -15,7 +15,7 @@ export default function Contact() {
                   Contact Us
                 </h1>
                 <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-                  Ready to take your security to the next level? Get in touch with us.
+                  Need help accessing our digital resources or have questions about our platform? Get in touch with us.
                 </p>
               </div>
               
@@ -94,7 +94,7 @@ export default function Contact() {
                   <div>
                     <h2 className="text-2xl font-bold text-text mb-6">Get in touch</h2>
                     <p className="text-text-secondary leading-relaxed mb-6">
-                      We're here to help you strengthen your organization's security posture. Whether you need a comprehensive security assessment, threat intelligence, or custom software development, we're ready to assist.
+                      We're here to help you navigate our digital ecosystem and access the resources you need. Whether you need technical support, platform access, or have questions about our tools and services, we're ready to assist.
                     </p>
                   </div>
                   
@@ -108,7 +108,7 @@ export default function Contact() {
                       </div>
                       <div>
                         <h3 className="font-semibold text-text">Location</h3>
-                        <p className="text-text-secondary">Orlando, Florida</p>
+                        <p className="text-text-secondary">Global Operations</p>
                       </div>
                     </div>
                     
@@ -120,7 +120,7 @@ export default function Contact() {
                       </div>
                       <div>
                         <h3 className="font-semibold text-text">Email</h3>
-                        <p className="text-text-secondary">contact@synapsesoftworks.llc</p>
+                        <p className="text-text-secondary">contact@10c4ifoxtrot.com</p>
                       </div>
                     </div>
                     
@@ -140,10 +140,10 @@ export default function Contact() {
                   <div className="bg-accent/10 border border-accent/20 rounded-lg p-6">
                     <h3 className="font-semibold text-text mb-2">What to expect</h3>
                     <ul className="text-sm text-text-secondary space-y-1">
-                      <li>• Initial consultation within 24 hours</li>
-                      <li>• Custom security assessment proposal</li>
-                      <li>• Transparent pricing and timeline</li>
-                      <li>• Ongoing support and guidance</li>
+                      <li>• Response within 24 hours</li>
+                      <li>• Platform access and onboarding</li>
+                      <li>• Technical support and training</li>
+                      <li>• Ongoing platform assistance</li>
                     </ul>
                   </div>
                 </div>

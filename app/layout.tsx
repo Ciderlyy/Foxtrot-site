@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Synapse Softworks',
-  description: 'Taking security seriously. We help organizations by reinforcing them with true competent security.',
+  title: '10C4I Foxtrot - Digital Hub',
+  description: 'Central hub for all 10C4I Foxtrot digital resources, tools, and company information.',
 }
 
 export default function RootLayout({

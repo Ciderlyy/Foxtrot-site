@@ -7,10 +7,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
-            <h3 className="text-lg font-bold text-text mb-4">SYNAPSE SOFTWORKS</h3>
+            <h3 className="text-lg font-bold text-text mb-4">10C4I FOXTROT</h3>
             <div className="flex space-x-4">
               <Link 
-                href="https://x.com/synsoftworks" 
+                href="https://x.com/10c4ifoxtrot" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-text-secondary hover:text-accent transition-colors"
@@ -20,7 +20,7 @@ export default function Footer() {
                 </svg>
               </Link>
               <Link 
-                href="https://github.com/synllc" 
+                href="https://github.com/10c4ifoxtrot" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-text-secondary hover:text-accent transition-colors"
@@ -43,6 +43,24 @@ export default function Footer() {
                 Home
               </Link>
               <Link 
+                href="/resources" 
+                className="block text-text-secondary hover:text-text transition-colors"
+              >
+                Resources
+              </Link>
+              <Link 
+                href="/tools" 
+                className="block text-text-secondary hover:text-text transition-colors"
+              >
+                Tools
+              </Link>
+              <Link 
+                href="/about" 
+                className="block text-text-secondary hover:text-text transition-colors"
+              >
+                About
+              </Link>
+              <Link 
                 href="/contact" 
                 className="block text-text-secondary hover:text-text transition-colors"
               >
@@ -54,10 +72,10 @@ export default function Footer() {
           {/* Legal */}
           <div className="md:col-span-1">
             <p className="text-sm text-text-secondary leading-relaxed">
-              Copyright © 2018 - 2025 Synapse Softworks LLC. All rights reserved.
+              Copyright © 2024 - 2025 10C4I Foxtrot. All rights reserved.
             </p>
             <p className="text-sm text-text-secondary leading-relaxed mt-4">
-              Synapse Softworks LLC is a cybersecurity consulting and software engineering firm headquartered in Florida. We are not a licensed private investigative agency under Florida Statutes Chapter 493. We do not conduct physical investigations or any services requiring a private investigator license. Our work is strictly digital in nature and performed using publicly available or legally obtained information.
+              10C4I Foxtrot is a leading digital innovation company specializing in comprehensive technology solutions and digital ecosystem management. This megasite serves as the central hub for all our digital resources and tools.
             </p>
           </div>
         </div>

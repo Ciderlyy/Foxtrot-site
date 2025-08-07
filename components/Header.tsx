@@ -12,7 +12,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
           {/* Logo */}
           <Link href="/" className="text-xl font-bold text-text hover:text-accent transition-colors">
-            SYNAPSE SOFTWORKS
+            10C4I FOXTROT
           </Link>
 
           {/* Desktop Navigation */}
@@ -22,6 +22,24 @@ export default function Header() {
               className="text-text-secondary hover:text-text transition-colors"
             >
               Home
+            </Link>
+            <Link 
+              href="/resources" 
+              className="text-text-secondary hover:text-text transition-colors"
+            >
+              Resources
+            </Link>
+            <Link 
+              href="/tools" 
+              className="text-text-secondary hover:text-text transition-colors"
+            >
+              Tools
+            </Link>
+            <Link 
+              href="/about" 
+              className="text-text-secondary hover:text-text transition-colors"
+            >
+              About
             </Link>
             <Link 
               href="/contact" 
@@ -56,6 +74,27 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
+              </Link>
+              <Link 
+                href="/resources" 
+                className="block py-2 text-text-secondary hover:text-text transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Resources
+              </Link>
+              <Link 
+                href="/tools" 
+                className="block py-2 text-text-secondary hover:text-text transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Tools
+              </Link>
+              <Link 
+                href="/about" 
+                className="block py-2 text-text-secondary hover:text-text transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                About
               </Link>
               <Link 
                 href="/contact" 

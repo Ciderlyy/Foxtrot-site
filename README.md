@@ -1,10 +1,10 @@
-# Synapse Softworks Clone
+# 10C4I Foxtrot Megasite
 
-An exact clone of the Synapse Softworks website built with Next.js, TypeScript, and Tailwind CSS.
+A comprehensive digital hub for 10C4I Foxtrot company, serving as the central command center for all digital resources, tools, and company information.
 
 ## Features
 
-- **Exact Replica**: Faithful reproduction of the original Synapse Softworks website
+- **Digital Command Center**: Centralized access to all company digital resources
 - **Modern Tech Stack**: Built with Next.js 14, TypeScript, and Tailwind CSS
 - **Responsive Design**: Fully responsive across all devices
 - **Performance Optimized**: Fast loading with Next.js optimizations
@@ -19,6 +19,14 @@ An exact clone of the Synapse Softworks website built with Next.js, TypeScript, 
 - **Font**: Inter (Google Fonts)
 - **Icons**: Heroicons (SVG)
 - **Deployment**: Vercel-ready
+
+## Digital Resources Included
+
+- **Company Resources**: Internal documents, policies, and organizational information
+- **Digital Tools**: Productivity, collaboration, and project management tools
+- **Communication Hub**: Team collaboration and information sharing platform
+- **Data Analytics**: Business intelligence and performance monitoring tools
+- **Security Portal**: Secure access to sensitive company information
 
 ## Project Structure
 
@@ -115,10 +123,10 @@ Update the content in:
 - `components/Header.tsx` - Navigation links
 - `components/Footer.tsx` - Footer content
 
-## Original Website
+## About 10C4I Foxtrot
 
-This is a clone of [Synapse Softworks](https://synapsesoftworks.llc), a cybersecurity consulting and software engineering firm.
+10C4I Foxtrot is a leading digital innovation company specializing in comprehensive technology solutions and digital ecosystem management. This megasite serves as the central hub for all our digital resources and tools.
 
 ## License
 
-This project is for educational purposes only. The original design and content belong to Synapse Softworks LLC.
+This project is proprietary to 10C4I Foxtrot. All rights reserved.
