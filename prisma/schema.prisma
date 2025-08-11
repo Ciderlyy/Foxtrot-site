@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String   // hashed with bcrypt
+  role      Role     @default(VIEWER)
+  rank      String?  // military rank
+  unit      String?  // military unit
+  isActive  Boolean  @default(true)
+  lastLogin DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Audit trail
+  accessLogs AccessLog[]
+  
+  @@map("users")
+}
+
+model Personnel {
+  id        String   @id @default(cuid())
+  name      String
+  rank      String
+  platoon   String
+  status    String?  // Available/Leave/MC/Deployed
+  duties    Duty[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("personnel")
+}
+
+model Duty {
+  id          String   @id @default(cuid())
+  type        DutyType
+  date        DateTime
+  description String?
+  personnelId String
+  personnel   Personnel @relation(fields: [personnelId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("duties")
+}
+
+model AccessLog {
+  id           String   @id @default(cuid())
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id])
+  action       String   // LOGIN, LOGOUT, PAGE_ACCESS, etc.
+  pageAccessed String?
+  ipAddress    String?
+  userAgent    String?
+  timestamp    DateTime @default(now())
+  
+  @@map("access_logs")
+}
+
+model FailedLogin {
+  id        String   @id @default(cuid())
+  email     String
+  ipAddress String?
+  timestamp DateTime @default(now())
+  
+  @@map("failed_logins")
+}
+
+enum Role { 
+  ADMIN 
+  TRAINER 
+  VIEWER 
+}
+
+enum DutyType { 
+  COS      // Command of Ship
+  GC        // Guard Commander
+  SIGC      // Signal Commander
+  GUARDS    // Guard Duty
+  TRAINING  // Training
+  ADMIN     // Administrative
+  OTHER     // Other duties
+}

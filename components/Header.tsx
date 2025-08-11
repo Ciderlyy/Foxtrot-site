@@ -3,21 +3,20 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { useSession, signOut } from 'next-auth/react'
 import Logo from './Logo'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { data: session } = useSession()
 
   const handleLogout = () => {
-    // Clear all authentication tokens
-    localStorage.removeItem('auth_resources')
-    localStorage.removeItem('auth_tools')
-    // Reload the page to reset authentication state
-    window.location.reload()
+    signOut({ callbackUrl: '/' })
   }
 
   const navItems = [
     { href: '/', label: 'Home' },
+    ...(session ? [{ href: '/dashboard', label: 'Dashboard' }] : []),
     { href: '/resources', label: 'Resources' },
     { href: '/tools', label: 'Tools' },
     { href: '/about', label: 'About' },
@@ -64,17 +63,38 @@ export default function Header() {
                 </Link>
               </motion.div>
             ))}
-            <motion.button
-              onClick={handleLogout}
-              className="text-text-secondary hover:text-accent transition-colors font-medium px-3 py-1 border border-accent/30 rounded hover:border-accent/50 hover:bg-accent/10"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-            >
-              Logout
-            </motion.button>
+            {session?.user ? (
+              <div className="flex items-center gap-4">
+                <div className="text-right text-sm">
+                  <p className="text-white font-medium">{session.user.name || session.user.email}</p>
+                  <p className="text-white/70">{(session.user as any).role || 'User'}</p>
+                </div>
+                <motion.button
+                  onClick={handleLogout}
+                  className="text-text-secondary hover:text-accent transition-colors font-medium px-3 py-1 border border-accent/30 rounded hover:border-accent/50 hover:bg-accent/10"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                >
+                  Logout
+                </motion.button>
+              </div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                <Link 
+                  href="/login"
+                  className="text-text-secondary hover:text-accent transition-colors font-medium px-4 py-2 border border-accent/30 rounded hover:border-accent/50 hover:bg-accent/10"
+                >
+                  Login
+                </Link>
+              </motion.div>
+            )}
           </nav>
 
           {/* Mobile menu button */}

@@ -1,81 +1,122 @@
-import { NextRequest, NextResponse } from 'next/server'
-import jwt from 'jsonwebtoken'
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import NextAuth from "next-auth"
+import Credentials from "next-auth/providers/credentials"
+import { compare } from "bcrypt"
+import { prisma } from "./prisma"
 
-export interface JWTPayload {
-  userId: string
-  username: string
-  rank: string
-  unit: string
-  iat: number
-  exp: number
-}
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  session: { strategy: "jwt" },
+  pages: {
+    signIn: '/login',
+    error: '/login',
+  },
+  providers: [
+    Credentials({
+      name: "credentials",
+      credentials: { 
+        email: { label: "Email", type: "email" }, 
+        password: { label: "Password", type: "password" } 
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null
+        }
 
-export function verifyToken(token: string): JWTPayload | null {
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload
-    return decoded
-  } catch (error) {
-    return null
-  }
-}
+        try {
+          const user = await prisma.user.findUnique({ 
+            where: { email: credentials.email },
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              password: true,
+              role: true,
+              rank: true,
+              unit: true,
+              isActive: true
+            }
+          })
 
-export function getTokenFromRequest(request: NextRequest): string | null {
-  const authHeader = request.headers.get('authorization')
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    return authHeader.substring(7)
-  }
-  return null
-}
+          if (!user || !user.isActive) {
+            return null
+          }
 
-export function requireAuth(
-  request: NextRequest,
-  handler: (request: NextRequest, user: JWTPayload) => Promise<NextResponse>
-) {
-  return async (request: NextRequest) => {
-    try {
-      const token = getTokenFromRequest(request)
-      
-      if (!token) {
-        return NextResponse.json(
-          { error: 'Authentication token required' },
-          { status: 401 }
-        )
+          const isValidPassword = await compare(credentials.password, user.password)
+          if (!isValidPassword) {
+            // Log failed login attempt
+            await prisma.failedLogin.create({
+              data: {
+                email: credentials.email,
+                ipAddress: 'unknown' // Will be updated in middleware
+              }
+            })
+            return null
+          }
+
+          // Update last login
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { lastLogin: new Date() }
+          })
+
+          // Log successful login
+          await prisma.accessLog.create({
+            data: {
+              userId: user.id,
+              action: 'LOGIN',
+              pageAccessed: 'login',
+              ipAddress: 'unknown', // Will be updated in middleware
+              userAgent: 'unknown'
+            }
+          })
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            rank: user.rank,
+            unit: user.unit
+          }
+        } catch (error) {
+          console.error('Auth error:', error)
+          return null
+        }
       }
-
-      const user = verifyToken(token)
-      if (!user) {
-        return NextResponse.json(
-          { error: 'Invalid or expired token' },
-          { status: 401 }
-        )
+    })
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role
+        token.rank = user.rank
+        token.unit = user.unit
       }
-
-      // Log access
-      await logAccess(request, user, 'API_ACCESS')
-
-      return handler(request, user)
-    } catch (error) {
-      console.error('Auth middleware error:', error)
-      return NextResponse.json(
-        { error: 'Authentication failed' },
-        { status: 401 }
-      )
+      return token
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.role = token.role as string
+        session.user.rank = token.rank as string
+        session.user.unit = token.unit as string
+      }
+      return session
+    }
+  },
+  events: {
+    async signOut({ token }) {
+      if (token.sub) {
+        await prisma.accessLog.create({
+          data: {
+            userId: token.sub,
+            action: 'LOGOUT',
+            pageAccessed: 'logout',
+            ipAddress: 'unknown',
+            userAgent: 'unknown'
+          }
+        })
+      }
     }
   }
-}
-
-async function logAccess(request: NextRequest, user: JWTPayload, action: string) {
-  try {
-    const { supabase } = await import('@/lib/supabase')
-    
-    await supabase.from('access_logs').insert({
-      user_id: user.userId,
-      action,
-      page_accessed: request.nextUrl.pathname,
-      ip_address: request.ip || 'unknown',
-      user_agent: request.headers.get('user-agent') || 'unknown'
-    })
-  } catch (error) {
-    console.error('Failed to log access:', error)
-  }
-}
+})
