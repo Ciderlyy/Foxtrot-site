@@ -1,6 +1,7 @@
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import PasswordProtection from '@/components/PasswordProtection'
 
 export default function Tools() {
   const toolCategories = [
@@ -84,16 +85,17 @@ export default function Tools() {
       <Header />
       
       <main className="flex-1">
-        <section className="section-padding">
-          <div className="container-max">
-            <div className="text-center mb-16">
-              <h1 className="text-4xl md:text-5xl font-bold text-text mb-6">
-                Digital Tools
-              </h1>
-              <p className="text-xl text-text-secondary max-w-3xl mx-auto">
-                Access our comprehensive suite of digital tools designed to enhance productivity, collaboration, and efficiency across all aspects of your work.
-              </p>
-            </div>
+        <PasswordProtection pageName="Tools">
+          <section className="section-padding">
+            <div className="container-max">
+              <div className="text-center mb-16">
+                <h1 className="text-4xl md:text-5xl font-bold text-text mb-6">
+                  Digital Tools
+                </h1>
+                <p className="text-xl text-text-secondary max-w-3xl mx-auto">
+                  Access our comprehensive suite of digital tools designed to enhance productivity, collaboration, and efficiency across all aspects of your work.
+                </p>
+              </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {toolCategories.map((category, index) => (
@@ -154,6 +156,7 @@ export default function Tools() {
             </div>
           </div>
         </section>
+        </PasswordProtection>
       </main>
       
       <Footer />

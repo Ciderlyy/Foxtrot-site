@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer className="bg-secondary/20 border-t border-accent/20">
       <div className="container-max section-padding">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
             <div className="flex items-center space-x-3 mb-4">
@@ -87,13 +87,60 @@ export default function Footer() {
           </div>
 
           {/* Legal */}
-          <div className="md:col-span-1">
+          <div>
+            <h4 className="text-lg font-semibold text-text mb-4">Legal</h4>
             <p className="text-sm text-text-secondary leading-relaxed">
               Copyright © 2024 - 2025 10C4I Foxtrot. All rights reserved.
             </p>
             <p className="text-sm text-text-secondary leading-relaxed mt-4">
               10C4I Foxtrot is a leading digital innovation company specializing in comprehensive technology solutions and digital ecosystem management. This megasite serves as the central hub for all our digital resources and tools.
             </p>
+          </div>
+
+          {/* Credits */}
+          <div>
+            <h4 className="text-lg font-semibold text-text mb-4">Credits</h4>
+            <div className="space-y-3">
+              <div>
+                <p className="text-sm text-text-secondary">
+                  <span className="text-accent font-medium">Website Created By:</span>
+                </p>
+                <p className="text-lg font-bold text-accent">3SG KOH JER MING</p>
+                <p className="text-xs text-text-secondary mt-1">
+                  Full-Stack Developer & Military Automation Specialist
+                </p>
+                <p className="text-xs text-accent mt-1">
+                  @Ciderlyy on GitHub
+                </p>
+              </div>
+              <div className="pt-2">
+                <p className="text-xs text-text-secondary">
+                  Built with Next.js, React, TypeScript & Tailwind CSS
+                </p>
+                <p className="text-xs text-text-secondary mt-1">
+                  Featuring Framer Motion animations
+                </p>
+                <p className="text-xs text-text-secondary mt-1">
+                  Specializing in Military Automation & Web Development
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Bottom Credits Bar */}
+        <div className="border-t border-accent/20 mt-8 pt-6">
+          <div className="container-max">
+            <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+              <div className="text-sm text-text-secondary mb-2 md:mb-0">
+                <span>Website proudly created by </span>
+                <span className="text-accent font-semibold">3SG KOH JER MING</span>
+                <span> - Military Automation Specialist & Developer</span>
+              </div>
+              <div className="text-xs text-text-secondary">
+                <span>GitHub: @Ciderlyy | Built with modern web technologies</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

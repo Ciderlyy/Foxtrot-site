@@ -1,6 +1,7 @@
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
+import PasswordProtection from '@/components/PasswordProtection'
 
 export default function Resources() {
   const resourceCategories = [
@@ -71,16 +72,17 @@ export default function Resources() {
       <Header />
       
       <main className="flex-1">
-        <section className="section-padding">
-          <div className="container-max">
-            <div className="text-center mb-16">
-              <h1 className="text-4xl md:text-5xl font-bold text-text mb-6">
-                Digital Resources
-              </h1>
-              <p className="text-xl text-text-secondary max-w-3xl mx-auto">
-                Access all your company resources, tools, and information in one centralized location. Everything you need is organized and easily accessible.
-              </p>
-            </div>
+        <PasswordProtection pageName="Resources">
+          <section className="section-padding">
+            <div className="container-max">
+              <div className="text-center mb-16">
+                <h1 className="text-4xl md:text-5xl font-bold text-text mb-6">
+                  Digital Resources
+                </h1>
+                <p className="text-xl text-text-secondary max-w-3xl mx-auto">
+                  Access all your company resources, tools, and information in one centralized location. Everything you need is organized and easily accessible.
+                </p>
+              </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {resourceCategories.map((category, index) => (
@@ -122,6 +124,7 @@ export default function Resources() {
             </div>
           </div>
         </section>
+        </PasswordProtection>
       </main>
       
       <Footer />
