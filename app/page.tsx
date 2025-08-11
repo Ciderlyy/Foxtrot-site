@@ -1,11 +1,7 @@
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ServiceCard from '@/components/ServiceCard'
-import AnimatedSection from '@/components/AnimatedSection'
-import ParallaxSection from '@/components/ParallaxSection'
-import FloatingElements from '@/components/FloatingElements'
 import Link from 'next/link'
-import Image from 'next/image'
 
 export default function Home() {
   const digitalResources = [
@@ -62,131 +58,83 @@ export default function Home() {
       <Header />
       
       <main className="flex-1">
-        {/* Hero Section with Parallax */}
-        <section className="section-padding relative overflow-hidden">
-          {/* Floating Elements */}
-          <FloatingElements />
-          
-          {/* Background Pattern with Parallax */}
-          <ParallaxSection speed={0.3} className="absolute inset-0 opacity-5">
-            <div className="absolute top-20 left-10 w-32 h-32 bg-accent rounded-full"></div>
-            <div className="absolute top-40 right-20 w-24 h-24 bg-fox-orange rounded-full"></div>
-            <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-navy-blue rounded-full"></div>
-            <div className="absolute bottom-40 right-1/3 w-20 h-20 bg-maroon-red rounded-full"></div>
-          </ParallaxSection>
-          
-          <div className="container-max relative z-10">
-            <AnimatedSection direction="up" delay={0.2}>
-              <div className="text-center max-w-4xl mx-auto">
-                {/* Fox Logo Icon with Animation */}
-                <AnimatedSection direction="up" delay={0.4}>
-                  <div className="w-24 h-24 mx-auto mb-8 flex items-center justify-center">
-                    <div className="relative w-20 h-20">
-                      <Image
-                        src="/foxtrot-logo.png"
-                        alt="10C4I Foxtrot Logo"
-                        fill
-                        className="object-contain"
-                        priority
-                      />
-                    </div>
-                  </div>
-                </AnimatedSection>
-                
-                <AnimatedSection direction="up" delay={0.6}>
-                  <h1 className="text-4xl md:text-6xl font-bold text-text mb-6">
-                    Your Digital{' '}
-                    <span className="text-accent bg-gradient-to-r from-accent to-fox-orange bg-clip-text text-transparent">
-                      Command Center
-                    </span>
-                  </h1>
-                </AnimatedSection>
-                
-                <AnimatedSection direction="up" delay={0.8}>
-                  <p className="text-xl text-text-secondary mb-8 max-w-2xl mx-auto">
-                    Centralized access to all 10C4I Foxtrot digital resources, tools, and company information in one powerful platform.
-                  </p>
-                </AnimatedSection>
-                
-                <AnimatedSection direction="up" delay={1.0}>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <button className="btn-primary flex items-center space-x-2 hover:scale-105 transition-transform duration-200">
-                      <span>See more</span>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </button>
-                    
-                    <Link href="/contact" className="btn-secondary hover:scale-105 transition-transform duration-200">
-                      Contact us
-                    </Link>
-                  </div>
-                </AnimatedSection>
+        {/* Hero Section */}
+        <section className="section-padding">
+          <div className="container-max">
+            <div className="text-center max-w-4xl mx-auto">
+              <div className="w-24 h-24 bg-accent/20 rounded-full mx-auto mb-8 flex items-center justify-center">
+                <svg className="w-12 h-12 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
               </div>
-            </AnimatedSection>
+              
+              <h1 className="text-4xl md:text-6xl font-bold text-text mb-6">
+                Your Digital Command Center
+              </h1>
+              
+              <p className="text-xl text-text-secondary mb-8 max-w-2xl mx-auto">
+                Centralized access to all 10C4I Foxtrot digital resources, tools, and company information in one powerful platform.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button className="btn-primary flex items-center space-x-2">
+                  <span>See more</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </button>
+                
+                <Link href="/contact" className="btn-secondary">
+                  Contact us
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* Digital Resources Section */}
         <section className="section-padding bg-secondary/10">
           <div className="container-max">
-            <AnimatedSection direction="up" delay={0.2}>
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold text-text mb-4">
-                  Digital Resources Hub
-                </h2>
-                <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-                  Everything you need to access, manage, and utilize our digital ecosystem.
-                </p>
-              </div>
-            </AnimatedSection>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-text mb-4">
+                Digital Resources Hub
+              </h2>
+              <p className="text-lg text-text-secondary max-w-2xl mx-auto">
+                Everything you need to access, manage, and utilize our digital ecosystem.
+              </p>
+            </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {digitalResources.map((resource, index) => (
-                <AnimatedSection 
-                  key={index} 
-                  direction="up" 
-                  delay={0.2 + (index * 0.1)}
-                >
-                  <ServiceCard
-                    title={resource.title}
-                    description={resource.description}
-                    icon={resource.icon}
-                  />
-                </AnimatedSection>
+                <ServiceCard
+                  key={index}
+                  title={resource.title}
+                  description={resource.description}
+                  icon={resource.icon}
+                />
               ))}
             </div>
           </div>
         </section>
 
-        {/* About Section with Parallax */}
-        <section className="section-padding relative">
-          <ParallaxSection speed={0.2} className="absolute inset-0 opacity-5">
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-accent/5 via-transparent to-fox-orange/5"></div>
-          </ParallaxSection>
-          
-          <div className="container-max relative z-10">
-            <AnimatedSection direction="up" delay={0.2}>
-              <div className="max-w-4xl mx-auto">
-                <h2 className="text-3xl md:text-4xl font-bold text-text mb-8 text-center">
-                  About 10C4I Foxtrot
-                </h2>
+        {/* About Section */}
+        <section className="section-padding">
+          <div className="container-max">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold text-text mb-8 text-center">
+                About 10C4I Foxtrot
+              </h2>
+              
+              <div className="space-y-6 text-lg text-text-secondary leading-relaxed">
+                <p>
+                  <strong>10C4I Foxtrot</strong> represents the cutting edge of digital innovation and strategic technology solutions. Our comprehensive digital ecosystem is designed to streamline operations, enhance collaboration, and provide secure access to all company resources.
+                </p>
                 
-                <div className="space-y-6 text-lg text-text-secondary leading-relaxed">
-                  <AnimatedSection direction="left" delay={0.4}>
-                    <p>
-                      <strong>10C4I Foxtrot</strong> represents the cutting edge of digital innovation and strategic technology solutions. Our comprehensive digital ecosystem is designed to streamline operations, enhance collaboration, and provide secure access to all company resources.
-                    </p>
-                  </AnimatedSection>
-                  
-                  <AnimatedSection direction="right" delay={0.6}>
-                    <p>
-                      This megasite serves as the central command center for all our digital operations, connecting teams, tools, and resources in one unified platform. From project management to data analytics, communication tools to security protocols, everything you need is just a click away.
-                    </p>
-                  </AnimatedSection>
-                </div>
+                <p>
+                  This megasite serves as the central command center for all our digital operations, connecting teams, tools, and resources in one unified platform. From project management to data analytics, communication tools to security protocols, everything you need is just a click away.
+                </p>
               </div>
-            </AnimatedSection>
+            </div>
           </div>
         </section>
       </main>
