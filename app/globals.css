@@ -14,11 +14,11 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-accent hover:bg-accent/90 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200;
+    @apply bg-accent hover:bg-accent-dark text-primary font-medium py-3 px-6 rounded-lg transition-colors duration-200 shadow-lg;
   }
   
   .btn-secondary {
-    @apply bg-transparent border border-accent text-accent hover:bg-accent hover:text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200;
+    @apply bg-secondary border border-accent/30 text-text hover:bg-accent/20 font-medium py-3 px-6 rounded-lg transition-colors duration-200;
   }
   
   .section-padding {

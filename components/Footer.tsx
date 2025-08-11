@@ -1,13 +1,30 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Footer() {
   return (
-    <footer className="bg-secondary/20 border-t border-secondary/20">
+    <footer className="bg-secondary/20 border-t border-accent/20">
       <div className="container-max section-padding">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
-            <h3 className="text-lg font-bold text-text mb-4">10C4I FOXTROT</h3>
+            <div className="flex items-center space-x-3 mb-4">
+                             {/* Logo Icon */}
+               <div className="relative w-8 h-8">
+                 <Image
+                   src="/foxtrot-logo.png"
+                   alt="10C4I Foxtrot Logo"
+                   fill
+                   className="object-contain"
+                 />
+               </div>
+              
+              {/* Text */}
+              <div className="flex flex-col">
+                <span className="text-accent font-bold text-lg leading-none">10C4I</span>
+                <span className="text-accent font-bold text-xl leading-none">FOXTROT</span>
+              </div>
+            </div>
             <div className="flex space-x-4">
               <Link 
                 href="https://x.com/10c4ifoxtrot" 
@@ -38,31 +55,31 @@ export default function Footer() {
             <div className="space-y-2">
               <Link 
                 href="/" 
-                className="block text-text-secondary hover:text-text transition-colors"
+                className="block text-text-secondary hover:text-accent transition-colors"
               >
                 Home
               </Link>
               <Link 
                 href="/resources" 
-                className="block text-text-secondary hover:text-text transition-colors"
+                className="block text-text-secondary hover:text-accent transition-colors"
               >
                 Resources
               </Link>
               <Link 
                 href="/tools" 
-                className="block text-text-secondary hover:text-text transition-colors"
+                className="block text-text-secondary hover:text-accent transition-colors"
               >
                 Tools
               </Link>
               <Link 
                 href="/about" 
-                className="block text-text-secondary hover:text-text transition-colors"
+                className="block text-text-secondary hover:text-accent transition-colors"
               >
                 About
               </Link>
               <Link 
                 href="/contact" 
-                className="block text-text-secondary hover:text-text transition-colors"
+                className="block text-text-secondary hover:text-accent transition-colors"
               >
                 Contact
               </Link>

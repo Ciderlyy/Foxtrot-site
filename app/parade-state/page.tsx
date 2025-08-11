@@ -52,72 +52,71 @@ export default function ParadeState() {
 
   // Load data from localStorage on component mount
   useEffect(() => {
-    const savedPersonnel = localStorage.getItem('paradeStatePersonnel')
     const savedInputs = localStorage.getItem('paradeStateInputs')
     
     // Always load FOXTROT personnel (override any saved data for now)
     const defaultPersonnel: Personnel[] = [
-        // HQ
-        { id: '1', name: 'TAN YAN MING', rank: 'CPT', platoon: 'HQ', category: 'PS', position: 'OC', status: 'present' },
-        { id: '2', name: 'DOMINIC ANG', rank: '3WO', platoon: 'HQ', category: 'PS', position: 'SM', status: 'present' },
-        { id: '3', name: 'TAN KAI EN TERENCE', rank: 'LTA', platoon: 'HQ', category: 'PS', position: 'PS', status: 'present' },
-        { id: '4', name: 'EDEN KANG YI EN', rank: '2LT', platoon: 'HQ', category: 'PS', position: 'PS', status: 'present' },
-        { id: '5', name: 'RYAN CHEN YI HENG', rank: '2LT', platoon: 'HQ', category: 'PS', position: 'PS', status: 'present' },
-        { id: '6', name: 'ERNEST FOO JUN WEI', rank: '2LT', platoon: 'HQ', category: 'PS', position: 'PS', status: 'present' },
-        { id: '7', name: 'JADEN TAN YAN HAO', rank: '2LT', platoon: 'HQ', category: 'PS', position: 'PS', status: 'present' },
-        { id: '8', name: 'LEE JING SHENG', rank: 'SSG', platoon: 'HQ', category: 'SPECS', position: 'SPECS', status: 'present' },
-        { id: '9', name: 'ERVIN LEE JIA LIANG', rank: '2SG', platoon: 'HQ', category: 'SPECS', position: 'SPECS', status: 'present' },
-        { id: '10', name: 'SEAN LEE JIAN YI', rank: '2SG', platoon: 'HQ', category: 'SPECS', position: 'SPECS', status: 'present' },
-        
-        // PLATOON 1
-        { id: '11', name: 'HENG JING XUAN', rank: '2LT', platoon: 'PLATOON 1', category: 'PS', position: 'PC', status: 'present' },
-        { id: '12', name: 'LOH JIA WEI', rank: '2SG', platoon: 'PLATOON 1', category: 'SPECS', position: 'SPECS', status: 'present' },
-        { id: '13', name: 'QUEK ZHEN BENG JOEL', rank: '2SG', platoon: 'PLATOON 1', category: 'SPECS', position: 'SPECS', status: 'present' },
-        { id: '14', name: 'WONG KANG YU KAISER', rank: '3SG', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '15', name: 'JOSHUA JOSEPH JOHN', rank: '3SG', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '16', name: 'HWANG ZAVIER', rank: '3SG', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '17', name: 'TAN JUN YUAN RYAN', rank: '3SG', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '18', name: 'JUAY DING HONG', rank: '3SG', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '19', name: 'CHUA ZHI YANG JAVIER', rank: 'CFC', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '20', name: 'QUAH LIM KAI', rank: 'CFC', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '21', name: 'CHOO XING RONG', rank: 'CPL', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '22', name: 'JAVAN ONG ZHENG TAT', rank: 'CPL', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '23', name: 'JENSEN TOH RUIXUAN', rank: 'CPL', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '24', name: 'OLSEN BONG GUAN RONG', rank: 'CPL', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '25', name: 'JEREMY TAN JIA LE', rank: 'CPL', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '26', name: 'GOH TIONG LOON', rank: 'CPL', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '27', name: 'SENG WEI XIAN BENJAMIN', rank: 'LCP', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '28', name: 'SANAT ANAND', rank: 'LCP', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '29', name: 'SHAUN RAJ A S/O RAMAESH', rank: 'LCP', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '30', name: 'WEE ZHENG KAI', rank: 'LCP', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '31', name: 'BENJAMIN PANG ZHI HAO', rank: 'LCP', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        
-        // PLATOON 2
-        { id: '32', name: 'CALEB NG CHI TIONG', rank: '2LT', platoon: 'PLATOON 2', category: 'PS', position: 'PC', status: 'present' },
-        { id: '33', name: 'LEROY NEO EU XIANG', rank: '1SG', platoon: 'PLATOON 2', category: 'SPECS', position: 'SPECS', status: 'present' },
-        { id: '34', name: 'ONG KAI FENG KEVIN', rank: '3SG', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '35', name: 'WONG FUKAI ZACHARY', rank: '3SG', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '36', name: 'LIAO QING WEI BENNY', rank: '3SG', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '37', name: 'DENZEL LEE EU HAN', rank: '3SG', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '38', name: 'TIMOTHY ZHANG ZHI SHENG', rank: '3SG', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '39', name: 'KOH JER MING', rank: '3SG', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '40', name: 'ZACHARY LEONG', rank: 'LCP', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '41', name: 'BREDON OH JUN JIA', rank: 'LCP', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '42', name: 'MATTHEW GOILE JIAN FENG', rank: 'LCP', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '43', name: 'PRASATH NADARAJAN', rank: 'LCP', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        { id: '44', name: 'CHAN XU YANG TIMOTHY', rank: 'LCP', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
-        
-        // PLATOON 3
-        { id: '45', name: 'WONG EE SENG MAX', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' },
-        { id: '46', name: 'LIN SHU NUO', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' },
-        { id: '47', name: 'RAPHAEL LII', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' },
-        { id: '48', name: 'KESAV KUMAR SUBBURAJ', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' },
-        { id: '49', name: 'LEONG YU XUAN THADDEUS', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' },
-        { id: '50', name: 'RYAN ASHLEY DAVID', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' },
-        { id: '51', name: 'ANG QI YANG RYAN', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' }
-      ]
-      setPersonnel(defaultPersonnel)
-    }
+      // HQ
+      { id: '1', name: 'TAN YAN MING', rank: 'CPT', platoon: 'HQ', category: 'PS', position: 'OC', status: 'present' },
+      { id: '2', name: 'DOMINIC ANG', rank: '3WO', platoon: 'HQ', category: 'PS', position: 'SM', status: 'present' },
+      { id: '3', name: 'TAN KAI EN TERENCE', rank: 'LTA', platoon: 'HQ', category: 'PS', position: 'PS', status: 'present' },
+      { id: '4', name: 'EDEN KANG YI EN', rank: '2LT', platoon: 'HQ', category: 'PS', position: 'PS', status: 'present' },
+      { id: '5', name: 'RYAN CHEN YI HENG', rank: '2LT', platoon: 'HQ', category: 'PS', position: 'PS', status: 'present' },
+      { id: '6', name: 'ERNEST FOO JUN WEI', rank: '2LT', platoon: 'HQ', category: 'PS', position: 'PS', status: 'present' },
+      { id: '7', name: 'JADEN TAN YAN HAO', rank: '2LT', platoon: 'HQ', category: 'PS', position: 'PS', status: 'present' },
+      { id: '8', name: 'LEE JING SHENG', rank: 'SSG', platoon: 'HQ', category: 'SPECS', position: 'SPECS', status: 'present' },
+      { id: '9', name: 'ERVIN LEE JIA LIANG', rank: '2SG', platoon: 'HQ', category: 'SPECS', position: 'SPECS', status: 'present' },
+      { id: '10', name: 'SEAN LEE JIAN YI', rank: '2SG', platoon: 'HQ', category: 'SPECS', position: 'SPECS', status: 'present' },
+      
+      // PLATOON 1
+      { id: '11', name: 'HENG JING XUAN', rank: '2LT', platoon: 'PLATOON 1', category: 'PS', position: 'PC', status: 'present' },
+      { id: '12', name: 'LOH JIA WEI', rank: '2SG', platoon: 'PLATOON 1', category: 'SPECS', position: 'SPECS', status: 'present' },
+      { id: '13', name: 'QUEK ZHEN BENG JOEL', rank: '2SG', platoon: 'PLATOON 1', category: 'SPECS', position: 'SPECS', status: 'present' },
+      { id: '14', name: 'WONG KANG YU KAISER', rank: '3SG', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '15', name: 'JOSHUA JOSEPH JOHN', rank: '3SG', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '16', name: 'HWANG ZAVIER', rank: '3SG', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '17', name: 'TAN JUN YUAN RYAN', rank: '3SG', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '18', name: 'JUAY DING HONG', rank: '3SG', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '19', name: 'CHUA ZHI YANG JAVIER', rank: 'CFC', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '20', name: 'QUAH LIM KAI', rank: 'CFC', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '21', name: 'CHOO XING RONG', rank: 'CPL', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '22', name: 'JAVAN ONG ZHENG TAT', rank: 'CPL', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '23', name: 'JENSEN TOH RUIXUAN', rank: 'CPL', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '24', name: 'OLSEN BONG GUAN RONG', rank: 'CPL', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '25', name: 'JEREMY TAN JIA LE', rank: 'CPL', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '26', name: 'GOH TIONG LOON', rank: 'CPL', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '27', name: 'SENG WEI XIAN BENJAMIN', rank: 'LCP', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '28', name: 'SANAT ANAND', rank: 'LCP', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '29', name: 'SHAUN RAJ A S/O RAMAESH', rank: 'LCP', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '30', name: 'WEE ZHENG KAI', rank: 'LCP', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '31', name: 'BENJAMIN PANG ZHI HAO', rank: 'LCP', platoon: 'PLATOON 1', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      
+      // PLATOON 2
+      { id: '32', name: 'CALEB NG CHI TIONG', rank: '2LT', platoon: 'PLATOON 2', category: 'PS', position: 'PC', status: 'present' },
+      { id: '33', name: 'LEROY NEO EU XIANG', rank: '1SG', platoon: 'PLATOON 2', category: 'SPECS', position: 'SPECS', status: 'present' },
+      { id: '34', name: 'ONG KAI FENG KEVIN', rank: '3SG', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '35', name: 'WONG FUKAI ZACHARY', rank: '3SG', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '36', name: 'LIAO QING WEI BENNY', rank: '3SG', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '37', name: 'DENZEL LEE EU HAN', rank: '3SG', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '38', name: 'TIMOTHY ZHANG ZHI SHENG', rank: '3SG', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '39', name: 'KOH JER MING', rank: '3SG', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '40', name: 'ZACHARY LEONG', rank: 'LCP', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '41', name: 'BREDON OH JUN JIA', rank: 'LCP', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '42', name: 'MATTHEW GOILE JIAN FENG', rank: 'LCP', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '43', name: 'PRASATH NADARAJAN', rank: 'LCP', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      { id: '44', name: 'CHAN XU YANG TIMOTHY', rank: 'LCP', platoon: 'PLATOON 2', category: 'TROOPERS', position: 'TROOPERS', status: 'present' },
+      
+      // PLATOON 3
+      { id: '45', name: 'WONG EE SENG MAX', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' },
+      { id: '46', name: 'LIN SHU NUO', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' },
+      { id: '47', name: 'RAPHAEL LII', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' },
+      { id: '48', name: 'KESAV KUMAR SUBBURAJ', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' },
+      { id: '49', name: 'LEONG YU XUAN THADDEUS', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' },
+      { id: '50', name: 'RYAN ASHLEY DAVID', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' },
+      { id: '51', name: 'ANG QI YANG RYAN', rank: 'SCT', platoon: 'PLATOON 3', category: 'CADETS', position: 'CADETS', status: 'present' }
+    ]
+    setPersonnel(defaultPersonnel)
+    
     if (savedInputs) {
       setDailyInputs(JSON.parse(savedInputs))
     }
@@ -294,8 +293,8 @@ export default function ParadeState() {
                 onClick={() => setActiveTab('personnel')}
                 className={`px-6 py-3 rounded-lg font-medium transition-colors ${
                   activeTab === 'personnel'
-                    ? 'bg-accent text-white'
-                    : 'bg-secondary/20 text-text-secondary hover:text-text'
+                    ? 'bg-accent text-primary shadow-lg'
+                    : 'bg-secondary/20 text-text-secondary hover:text-accent hover:bg-secondary/30'
                 }`}
               >
                 Personnel Database
@@ -304,8 +303,8 @@ export default function ParadeState() {
                 onClick={() => setActiveTab('input')}
                 className={`px-6 py-3 rounded-lg font-medium transition-colors ${
                   activeTab === 'input'
-                    ? 'bg-accent text-white'
-                    : 'bg-secondary/20 text-text-secondary hover:text-text'
+                    ? 'bg-accent text-primary shadow-lg'
+                    : 'bg-secondary/20 text-text-secondary hover:text-accent hover:bg-secondary/30'
                 }`}
               >
                 Daily Input
@@ -314,8 +313,8 @@ export default function ParadeState() {
                 onClick={() => setActiveTab('report')}
                 className={`px-6 py-3 rounded-lg font-medium transition-colors ${
                   activeTab === 'report'
-                    ? 'bg-accent text-white'
-                    : 'bg-secondary/20 text-text-secondary hover:text-text'
+                    ? 'bg-accent text-primary shadow-lg'
+                    : 'bg-secondary/20 text-text-secondary hover:text-accent hover:bg-secondary/30'
                 }`}
               >
                 Parade State Report
@@ -324,7 +323,7 @@ export default function ParadeState() {
 
                              {/* Personnel Database Tab */}
                  {activeTab === 'personnel' && (
-                   <div className="bg-secondary/20 border border-secondary/30 rounded-lg p-6">
+                   <div className="bg-secondary/20 border border-accent/20 rounded-lg p-6">
                      <div className="flex justify-between items-center mb-6">
                        <div>
                          <h2 className="text-2xl font-bold text-text">Personnel Database</h2>

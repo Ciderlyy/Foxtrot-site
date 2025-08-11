@@ -2,6 +2,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ServiceCard from '@/components/ServiceCard'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Home() {
   const digitalResources = [
@@ -59,17 +60,35 @@ export default function Home() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="section-padding">
+        <section className="section-padding relative overflow-hidden">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-20 left-10 w-32 h-32 bg-accent rounded-full"></div>
+            <div className="absolute top-40 right-20 w-24 h-24 bg-fox-orange rounded-full"></div>
+            <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-navy-blue rounded-full"></div>
+            <div className="absolute bottom-40 right-1/3 w-20 h-20 bg-maroon-red rounded-full"></div>
+          </div>
+          
           <div className="container-max">
-            <div className="text-center max-w-4xl mx-auto">
-              <div className="w-24 h-24 bg-accent/20 rounded-full mx-auto mb-8 flex items-center justify-center">
-                <svg className="w-12 h-12 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
+            <div className="text-center max-w-4xl mx-auto relative z-10">
+              {/* Fox Logo Icon */}
+              <div className="w-24 h-24 mx-auto mb-8 flex items-center justify-center">
+                <div className="relative w-20 h-20">
+                  <Image
+                    src="/foxtrot-logo.png"
+                    alt="10C4I Foxtrot Logo"
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </div>
               </div>
               
               <h1 className="text-4xl md:text-6xl font-bold text-text mb-6">
-                Your Digital Command Center
+                Your Digital{' '}
+                <span className="text-accent bg-gradient-to-r from-accent to-fox-orange bg-clip-text text-transparent">
+                  Command Center
+                </span>
               </h1>
               
               <p className="text-xl text-text-secondary mb-8 max-w-2xl mx-auto">

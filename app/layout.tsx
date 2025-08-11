@@ -5,8 +5,11 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '10C4I Foxtrot - Digital Hub',
-  description: 'Central hub for all 10C4I Foxtrot digital resources, tools, and company information.',
+  title: '10C4I Foxtrot - Digital Command Center',
+  description: 'Comprehensive digital hub for 10C4I Foxtrot company resources, tools, and operational excellence.',
+  icons: {
+    icon: '/favicon.svg',
+  },
 }
 
 export default function RootLayout({
