@@ -1,5 +1,4 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+
 
 export default function About() {
   const companyValues = [
@@ -50,8 +49,6 @@ export default function About() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-      
       <main className="flex-1">
         {/* Hero Section */}
         <section className="section-padding">
@@ -198,8 +195,6 @@ export default function About() {
           </div>
         </section>
       </main>
-      
-      <Footer />
     </div>
   )
 }

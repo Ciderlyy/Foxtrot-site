@@ -1,7 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
-
 interface DashboardStatsProps {
   personnelCount: number
   dutyCount: number
@@ -33,12 +31,10 @@ export default function DashboardStats({ personnelCount, dutyCount, userRole }: 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {stats.map((stat, index) => (
-        <motion.div
+        <div
           key={stat.title}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
-          className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300"
+          className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 animate-fade-in"
+          style={{ animationDelay: `${index * 100}ms` }}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -49,7 +45,7 @@ export default function DashboardStats({ personnelCount, dutyCount, userRole }: 
               {stat.icon}
             </div>
           </div>
-        </motion.div>
+        </div>
       ))}
     </div>
   )

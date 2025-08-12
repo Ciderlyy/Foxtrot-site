@@ -1,5 +1,3 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import ServiceCard from '@/components/ServiceCard'
 import Link from 'next/link'
 
@@ -55,8 +53,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-      
       <main className="flex-1">
         {/* Hero Section */}
         <section className="section-padding">
@@ -138,8 +134,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-      
-      <Footer />
     </div>
   )
 }

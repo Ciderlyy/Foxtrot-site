@@ -1,5 +1,3 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import Link from 'next/link'
 import PasswordProtection from '@/components/PasswordProtection'
 
@@ -69,8 +67,6 @@ export default function Resources() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-      
       <main className="flex-1">
         <PasswordProtection pageName="Resources">
           <section className="section-padding">
@@ -126,8 +122,6 @@ export default function Resources() {
         </section>
         </PasswordProtection>
       </main>
-      
-      <Footer />
     </div>
   )
 }

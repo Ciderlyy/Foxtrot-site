@@ -1,7 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
-
 interface Personnel {
   id: string
   name: string
@@ -46,12 +44,10 @@ export default function PersonnelList({ personnel }: PersonnelListProps) {
   return (
     <div className="space-y-4">
       {personnel.map((person, index) => (
-        <motion.div
+        <div
           key={person.id}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, delay: index * 0.1 }}
-          className="bg-white/5 rounded-lg p-4 border border-white/10 hover:bg-white/10 transition-all duration-200"
+          className="bg-white/5 rounded-lg p-4 border border-white/10 hover:bg-white/10 transition-all duration-200 animate-fade-in"
+          style={{ animationDelay: `${index * 100}ms` }}
         >
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
@@ -84,7 +80,7 @@ export default function PersonnelList({ personnel }: PersonnelListProps) {
               </div>
             </div>
           )}
-        </motion.div>
+        </div>
       ))}
     </div>
   )
