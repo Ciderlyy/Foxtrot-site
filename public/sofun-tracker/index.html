@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced SOFUN Tracker System v2.0</title>
+        <link rel="icon" type="image/png" href="assets/foxtrot-logo.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- External Libraries (keep these exactly as they are) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <!-- Our CSS Files (we'll create these next) -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <style>
+    /* Make modal content scrollable if it overflows */
+    #editModal .modal-content {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    </style>
+</head>
+<body>
+    <!-- Background canvas removed per request -->
+    
+    <div class="container">
+        <div class="header">
+            <img src="assets/foxtrot-logo.png" alt="Foxtrot Logo" class="unit-logo" onerror="this.style.display='none'"/>
+            <h1>SOFUN Tracker System v2.0</h1>
+            <p>Enhanced NSF & Regular Personnel Assessment Tracking</p>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+        </div>
+
+        <div class="import-section">
+            <h3>📁 Import & Data Management</h3>
+            <div class="controls">
+                <div class="control-group">
+                    <label>Upload SOFUN Tracker Excel File:</label>
+                    <div class="file-upload-container">
+                        <input type="file" id="excelFile" accept=".xlsx,.xls" />
+                        <button class="btn btn-primary" id="processFileBtn" onclick="processExcelFile()">
+                            📊 Process File
+                        </button>
+                            <button class="btn" onclick="window.app?.exportBackup()">💾 Export Backup</button>
+                            <label class="btn">
+                                📥 Import Backup
+                                <input type="file" style="display:none" accept="application/json" onchange="(function(e){const f=e.target.files[0]; if(window.app&&f){window.app.importBackupFromFile(f); e.target.value='';}})(event)">
+                            </label>
+                    </div>
+                    <div id="fileStatus" class="file-status"></div>
+                    <small>Excel file must contain sheets named "IPPT", "RANGE", and "VOC"</small>
+                </div>
+                <button class="btn btn-warning" onclick="downloadImprovedExcel()">📊 Download Complete Dashboard Excel</button>
+                <button class="btn btn-secondary" onclick="window.print()">🖨️ Print Report</button>
+                <button class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>
+            </div>
+            
+            <div class="alert alert-info">
+                <strong>📋 Version 2.0 Features:</strong><br>
+                ✅ Search & Filter capabilities by name, platoon, or status<br>
+                ✅ Individual record editing with all fields<br>
+                ✅ Dark mode support for night viewing<br>
+                ✅ Simplified progress tracking: Y1 In progress → Y2 Not started → Y2 In progress → Y2 Completed<br>
+                ✅ Enhanced data tracking (test dates, platoon assignment, medical status)<br>
+                ✅ Bulk operations & complete audit trail<br>
+                ✅ Print-friendly reports for command briefings<br>
+                ✅ Automatic platoon name validation and correction
+            </div>
+        </div>
+
+        <div class="search-filter-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Search by name, platoon, or status..." oninput="handleSearch()" onchange="handleSearch()" onkeydown="if(event.key==='Enter'){handleSearch()}" >
+            </div>
+            <div class="filter-controls">
+                <select class="filter-select" id="categoryFilter" onchange="applyFilters()">
+                    <option value="">All Categories</option>
+                    <option value="NSF">NSF Only</option>
+                    <option value="Regular">Regular Only</option>
+                </select>
+                <select class="filter-select" id="statusFilter" onchange="applyFilters()">
+                    <option value="">All Status</option>
+                    <option value="Y1 In progress">Y1 In progress</option>
+                    <option value="Y1 Completed">Y1 Completed</option>
+                    <option value="Y2 Not started">Y2 Not started</option>
+                    <option value="Y2 In progress">Y2 In progress</option>
+                    <option value="Y2 Completed">Y2 Completed</option>
+                    <option value="Work Year Not started">Work Year Not started</option>
+                    <option value="Work Year In progress">Work Year In progress</option>
+                    <option value="Work Year Completed">Work Year Completed</option>
+                </select>
+                <select class="filter-select" id="platoonFilter" onchange="applyFilters()">
+                    <option value="">All Platoons</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="bulk-actions" id="bulkActions">
+            <h4>Bulk Actions</h4>
+            <button class="btn btn-primary" onclick="bulkUpdatePlatoon()">Update Platoon</button>
+            <button class="btn btn-warning" onclick="bulkUpdateStatus()">Update Status</button>
+            <button class="btn btn-danger" onclick="clearSelection()">Clear Selection</button>
+            <span id="selectedCount">0 selected</span>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Personnel</h3>
+                <div class="number" id="totalPersonnel">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total NSF</h3>
+                <div class="number" id="totalNSF">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Regulars</h3>
+                <div class="number" id="totalRegulars">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Y2 IPPT Gold</h3>
+                <div class="number" id="y2IpptGold">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Y2 VOC Pass</h3>
+                <div class="number" id="y2VocPass">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Y2 Range Qualified</h3>
+                <div class="number" id="y2RangeQualified">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Data Completeness</h3>
+                <div class="number" id="dataCompleteness">0%</div>
+            </div>
+        </div>
+
+        <div class="charts-section">
+            <h2>📊 Executive Dashboard</h2>
+            
+            <!-- Chart Selection Controls -->
+            <div class="chart-selection-panel">
+                <h3>📋 Chart Selection</h3>
+                <div class="chart-selection-grid">
+                    <div class="chart-selection-group">
+                        <h4>🏃‍♂️ IPPT Performance</h4>
+                        <div class="chart-options">
+                            <label class="chart-option">
+                                <input type="checkbox" id="chartY1Ippt" onchange="toggleChart('y1Ippt')">
+                                <span>Y1 IPPT Performance</span>
+                            </label>
+                            <label class="chart-option">
+                                <input type="checkbox" id="chartY2Ippt" onchange="toggleChart('y2Ippt')" checked>
+                                <span>Y2 IPPT Performance</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-selection-group">
+                        <h4>🎯 VOC Results</h4>
+                        <div class="chart-options">
+                            <label class="chart-option">
+                                <input type="checkbox" id="chartY1Voc" onchange="toggleChart('y1Voc')">
+                                <span>Y1 VOC Results</span>
+                            </label>
+                            <label class="chart-option">
+                                <input type="checkbox" id="chartY2Voc" onchange="toggleChart('y2Voc')" checked>
+                                <span>Y2 VOC Results</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-selection-group">
+                        <h4>🎯 Range/Combat Skills</h4>
+                        <div class="chart-options">
+                            <label class="chart-option">
+                                <input type="checkbox" id="chartY1Atp" onchange="toggleChart('y1Atp')">
+                                <span>Y1 ATP Performance</span>
+                            </label>
+                            <label class="chart-option">
+                                <input type="checkbox" id="chartY2Range" onchange="toggleChart('y2Range')" checked>
+                                <span>Y2 Range/CS Performance</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-selection-group">
+                        <h4>📈 Analysis</h4>
+                        <div class="chart-options">
+                            <label class="chart-option">
+                                <input type="checkbox" id="chartPlatoon" onchange="toggleChart('platoon')" checked>
+                                <span>Platoon Performance</span>
+                            </label>
+                            <label class="chart-option">
+                                <input type="checkbox" id="chartComparison" onchange="toggleChart('comparison')">
+                                <span>Y1 vs Y2 Comparison</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-selection-actions">
+                    <button class="btn btn-primary" onclick="selectAllCharts()">📊 Show All Charts</button>
+                    <button class="btn btn-secondary" onclick="clearAllCharts()">🗑️ Clear All</button>
+                    <button class="btn btn-info" onclick="resetDefaultCharts()">🔄 Reset to Default</button>
+                </div>
+            </div>
+            
+            <!-- Dynamic Charts Grid -->
+            <div class="charts-grid" id="chartsGrid">
+                <!-- Charts will be dynamically generated here -->
+                <div class="chart-wrapper" id="chart-y2Ippt" style="display: block;">
+                    <div class="chart-title">Y2 IPPT Performance</div>
+                    <div class="chart-container">
+                        <canvas id="y2IpptChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-wrapper" id="chart-y2Voc" style="display: block;">
+                    <div class="chart-title">Y2 VOC Results</div>
+                    <div class="chart-container">
+                        <canvas id="y2VocChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-wrapper" id="chart-y2Range" style="display: block;">
+                    <div class="chart-title">Y2 Range/CS Performance</div>
+                    <div class="chart-container">
+                        <canvas id="y2RangeChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-wrapper" id="chart-platoon" style="display: block;">
+                    <div class="chart-title">Platoon Performance Comparison</div>
+                    <div class="chart-container">
+                        <canvas id="platoonChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Y1 Charts (Hidden by default) -->
+                <div class="chart-wrapper" id="chart-y1Ippt" style="display: none;">
+                    <div class="chart-title">Y1 IPPT Performance</div>
+                    <div class="chart-container">
+                        <canvas id="y1IpptChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-wrapper" id="chart-y1Voc" style="display: none;">
+                    <div class="chart-title">Y1 VOC Results</div>
+                    <div class="chart-container">
+                        <canvas id="y1VocChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-wrapper" id="chart-y1Atp" style="display: none;">
+                    <div class="chart-title">Y1 ATP Performance</div>
+                    <div class="chart-container">
+                        <canvas id="y1AtpChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-wrapper" id="chart-comparison" style="display: none;">
+                    <div class="chart-title">Y1 vs Y2 Performance Comparison</div>
+                    <div class="chart-container">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tables-section">
+            <h2>👥 Personnel Management</h2>
+            
+            <div class="category-tabs">
+                <button class="category-tab active" onclick="switchCategory('nsf')">NSF Personnel</button>
+                <button class="category-tab" onclick="switchCategory('regulars')">Regular Personnel</button>
+                <button class="category-tab" onclick="switchCategory('summary')">Summary Report</button>
+                <button class="category-tab" onclick="switchCategory('audit')">Audit Log</button>
+            </div>
+
+            <div id="nsf" class="category-content active">
+                <h3>NSF Personnel</h3>
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="enableBulkSelect()">Select Multiple</button>
+                    <button class="btn btn-success" onclick="addNewPersonnel('nsf')">➕ Add Personnel</button>
+                </div>
+                <div class="table-container">
+                    <table id="nsfTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllNsf" onchange="selectAll('nsf')"></th>
+                                <th>No.</th>
+                                <th>Name</th>
+                                <th>Platoon</th>
+                                <th>ORD Date</th>
+                                <th>PES Status</th>
+                                <th colspan="3" class="phase-header">Y1 Assessment</th>
+                                <th colspan="3" class="phase-header">Y2 Assessment</th>
+                                <th>Medical Status</th>
+                                <th>Progress</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>IPPT</th>
+                                <th>VOC</th>
+                                <th>ATP</th>
+                                <th>IPPT</th>
+                                <th>VOC</th>
+                                <th>Range</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="nsfBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="regulars" class="category-content">
+                <h3>Regular Personnel</h3>
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="enableBulkSelect()">Select Multiple</button>
+                    <button class="btn btn-success" onclick="addNewPersonnel('regulars')">➕ Add Personnel</button>
+                </div>
+                <div class="table-container">
+                    <table id="regularsTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllReg" onchange="selectAll('regulars')"></th>
+                                <th>No.</th>
+                                <th>Name</th>
+                                <th>Unit</th>
+                                <th>Rank</th>
+                                <th>PES Status</th>
+                                <th colspan="4" class="phase-header">Work Year Assessment</th>
+                                <th>Medical Status</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>IPPT</th>
+                                <th>VOC</th>
+                                <th>ATP</th>
+                                <th>CS</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="regularsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="summary" class="category-content">
+                <h3>Summary Report</h3>
+                <div class="table-container">
+                    <table id="summaryTable">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Total Personnel</th>
+                                <th>Y1 Complete</th>
+                                <th>Y2 Complete</th>
+                                <th>Y2 IPPT Gold</th>
+                                <th>Y2 VOC Pass</th>
+                                <th>Y2 Range Qualified</th>
+                                <th>Completion Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summaryBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="audit" class="category-content">
+                <h3>Advanced Technical Audit Log</h3>
+                
+                <!-- Audit Controls -->
+                <div class="audit-controls">
+                    <div class="audit-filters">
+                        <select id="auditCategoryFilter" onchange="filterAdvancedAudit()">
+                            <option value="">All Categories</option>
+                            <option value="SYSTEM">🖥️ System</option>
+                            <option value="DATA">📊 Data</option>
+                            <option value="USER">👤 User</option>
+                            <option value="PERFORMANCE">⚡ Performance</option>
+                            <option value="SECURITY">🔒 Security</option>
+                            <option value="ERROR">❌ Error</option>
+                            <option value="NETWORK">🌐 Network</option>
+                            <option value="STORAGE">💾 Storage</option>
+                            <option value="UI">🎨 UI</option>
+                            <option value="VALIDATION">✅ Validation</option>
+                        </select>
+                        
+                        <select id="auditLevelFilter" onchange="filterAdvancedAudit()">
+                            <option value="">All Levels</option>
+                            <option value="DEBUG">Debug</option>
+                            <option value="INFO">Info</option>
+                            <option value="WARN">Warning</option>
+                            <option value="ERROR">Error</option>
+                        </select>
+                        
+                        <select id="auditTimeFilter" onchange="filterAdvancedAudit()">
+                            <option value="">All Time</option>
+                            <option value="5">Last 5 minutes</option>
+                            <option value="15">Last 15 minutes</option>
+                            <option value="60">Last hour</option>
+                            <option value="240">Last 4 hours</option>
+                        </select>
+                    </div>
+                    
+                    <div class="audit-actions">
+                        <button class="btn btn-info" onclick="refreshAdvancedAudit()">🔄 Refresh</button>
+                        <button class="btn btn-warning" onclick="exportAdvancedAudit()">📄 Export</button>
+                        <button class="btn btn-danger" onclick="clearAdvancedAudit()">🗑️ Clear</button>
+                        <button class="btn btn-secondary" onclick="showAuditSummary()">📊 Summary</button>
+                    </div>
+                </div>
+                
+                <!-- System Summary -->
+                <div class="audit-summary" id="auditSummary" style="display: none;">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+                
+                <!-- Advanced Audit Log Display -->
+                <div class="advanced-audit-log" id="advancedAuditLog">
+                    <div class="audit-loading">Loading advanced audit log...</div>
+                </div>
+                
+                <!-- Legacy Simple Audit Log (fallback) -->
+                <details class="legacy-audit-section">
+                    <summary>📋 Simple Audit Log (Legacy)</summary>
+                    <div class="audit-log" id="auditLog">
+                        <div class="audit-entry">System initialized</div>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2>Edit Personnel Record</h2>
+            <form id="editForm">
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label>PES Status:</label>
+                    <select id="editPes">
+                        <option value="">-</option>
+                        <option value="A">A</option>
+                        <option value="B1">B1</option>
+                        <option value="B2">B2</option>
+                        <option value="B3">B3</option>
+                        <option value="B4">B4</option>
+                        <option value="C1">C1</option>
+                        <option value="C2">C2</option>
+                        <option value="C9">C9</option>
+                        <option value="E1">E1</option>
+                        <option value="E9">E9</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Platoon:</label>
+                    <select id="editPlatoon" required>
+                        <option value="Unassigned">Unassigned</option>
+                        <optgroup label="Combat Units">
+                            <option value="Platoon 1">Platoon 1</option>
+                            <option value="Platoon 2">Platoon 2</option>
+                            <option value="Platoon 3">Platoon 3</option>
+                            <option value="Platoon 4">Platoon 4</option>
+                        </optgroup>
+                        <optgroup label="Support Units">
+                            <option value="COY HQ">COY HQ</option>
+                            <option value="Support Platoon">Support Platoon</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Medical">Medical</option>
+                            <option value="Signals">Signals</option>
+                            <option value="Transport">Transport</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>ORD Date (NSF only):</label>
+                    <input type="date" id="editOrdDate">
+                </div>
+                <div class="form-group">
+                    <label>Medical Status:</label>
+                    <select id="editMedicalStatus">
+                        <option value="Fit">Fit</option>
+                        <option value="Light Duty">Light Duty</option>
+                        <option value="Excused IPPT">Excused IPPT</option>
+                        <option value="Medical Board">Medical Board</option>
+                    </select>
+                </div>
+                <h3>Y1 Assessment</h3>
+                <div class="form-group">
+                    <label>IPPT:</label>
+                    <select id="editY1Ippt">
+                        <option value="">-</option>
+                        <option value="Gold">Gold</option>
+                        <option value="Silver">Silver</option>
+                        <option value="Pass">Pass</option>
+                        <option value="Fail">Fail</option>
+                    </select>
+                    <input type="date" id="editY1IpptDate" placeholder="Test date">
+                </div>
+                <div class="form-group">
+                    <label>VOC:</label>
+                    <select id="editY1Voc">
+                        <option value="">-</option>
+                        <option value="Pass">Pass</option>
+                        <option value="Fail">Fail</option>
+                    </select>
+                    <input type="date" id="editY1VocDate" placeholder="Test date">
+                </div>
+                <div class="form-group">
+                    <label>ATP:</label>
+                    <select id="editY1Atp">
+                        <option value="">-</option>
+                        <option value="Marksman">Marksman</option>
+                        <option value="Pass">Pass</option>
+                        <option value="Fail">Fail</option>
+                    </select>
+                    <input type="date" id="editY1AtpDate" placeholder="Test date">
+                </div>
+                <h3>Y2 Assessment</h3>
+                <div class="form-group">
+                    <label>IPPT:</label>
+                    <select id="editY2Ippt">
+                        <option value="">Pending</option>
+                        <option value="Gold">Gold</option>
+                        <option value="Silver">Silver</option>
+                        <option value="Pass">Pass</option>
+                        <option value="Fail">Fail</option>
+                    </select>
+                    <input type="date" id="editY2IpptDate" placeholder="Test date">
+                </div>
+                <div class="form-group">
+                    <label>VOC:</label>
+                    <select id="editY2Voc">
+                        <option value="">Pending</option>
+                        <option value="Pass">Pass</option>
+                        <option value="Fail">Fail</option>
+                    </select>
+                    <input type="date" id="editY2VocDate" placeholder="Test date">
+                </div>
+                <div class="form-group">
+                    <label>Range:</label>
+                    <select id="editY2Range">
+                        <option value="">Pending</option>
+                        <option value="Marksman">Marksman</option>
+                        <option value="Sharpshooter">Sharpshooter</option>
+                        <option value="Pass">Pass</option>
+                        <option value="Fail">Fail</option>
+                    </select>
+                    <input type="date" id="editY2RangeDate" placeholder="Test date">
+                </div>
+                
+                <h3 id="workYearHeader" style="display: none;">Work Year Assessment</h3>
+                <div id="workYearIpptGroup" class="form-group" style="display: none;">
+                    <label>IPPT:</label>
+                    <select id="editWorkYearIppt">
+                        <option value="">Pending</option>
+                        <option value="Gold">Gold</option>
+                        <option value="Silver">Silver</option>
+                        <option value="Pass">Pass</option>
+                        <option value="Fail">Fail</option>
+                    </select>
+                    <input type="date" id="editWorkYearIpptDate" placeholder="Test date">
+                </div>
+                <div id="workYearVocGroup" class="form-group" style="display: none;">
+                    <label>VOC:</label>
+                    <select id="editWorkYearVoc">
+                        <option value="">Pending</option>
+                        <option value="Pass">Pass</option>
+                        <option value="Fail">Fail</option>
+                    </select>
+                    <input type="date" id="editWorkYearVocDate" placeholder="Test date">
+                </div>
+                <div id="workYearAtpGroup" class="form-group" style="display: none;">
+                    <label>ATP:</label>
+                    <select id="editWorkYearAtp">
+                        <option value="">Pending</option>
+                        <option value="Marksman">Marksman</option>
+                        <option value="Pass">Pass</option>
+                        <option value="Fail">Fail</option>
+                    </select>
+                    <input type="date" id="editWorkYearAtpDate" placeholder="Test date">
+                </div>
+                <div id="workYearCsGroup" class="form-group" style="display: none;">
+                    <label>CS (Combat Shooting):</label>
+                    <select id="editWorkYearCs">
+                        <option value="">Pending</option>
+                        <option value="Marksman">Marksman</option>
+                        <option value="Sharpshooter">Sharpshooter</option>
+                        <option value="Pass">Pass</option>
+                        <option value="Fail">Fail</option>
+                    </select>
+                    <input type="date" id="editWorkYearCsDate" placeholder="Test date">
+                </div>
+                
+                <div style="text-align: right; margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <button type="button" class="btn btn-danger" id="deletePersonnelBtn" onclick="deletePersonnel()">Delete</button>
+                    <div>
+                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Our JavaScript Files - Order is important! -->
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/data-processor.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/personnel-manager.js"></script>
+    
+    <script src="js/advanced-audit.js"></script>
+    <script src="js/app.js"></script>
+
+
+<!-- Add this TEMPORARY script tag to the bottom of your index.html, just before </body> -->
+
+<script>
+// Quick temporary fix for dark mode - delegate to app if available
+function toggleDarkMode() {
+    if (window.app && typeof window.app.toggleDarkMode === 'function') {
+        window.app.toggleDarkMode();
+        return;
+    }
+    // Fallback if app not ready yet
+    document.body.classList.toggle('dark-mode');
+    const btn = document.querySelector('.dark-mode-toggle');
+    if (btn) {
+        btn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+
+// Load dark mode preference on page load
+document.addEventListener('DOMContentLoaded', function() {
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+        document.querySelector('.dark-mode-toggle').textContent = '☀️ Light Mode';
+    }
+});
+
+/* ---------- Advanced Audit Functions ---------- */
+
+function filterAdvancedAudit() {
+    const categoryFilter = document.getElementById('auditCategoryFilter').value;
+    const levelFilter = document.getElementById('auditLevelFilter').value;
+    const timeFilter = document.getElementById('auditTimeFilter').value;
+    
+    const filter = {};
+    if (categoryFilter) filter.category = categoryFilter;
+    if (levelFilter) filter.level = levelFilter;
+    if (timeFilter) filter.timeRange = parseInt(timeFilter);
+    
+    const auditLog = window.advancedAudit.getAuditLog(filter);
+    displayFilteredAuditLog(auditLog);
+    
+    window.advancedAudit.logUI('DEBUG', 'Audit log filtered', {
+        category: categoryFilter || 'All',
+        level: levelFilter || 'All',
+        timeRange: timeFilter || 'All',
+        resultCount: auditLog.length
+    });
+}
+
+function displayFilteredAuditLog(auditLog) {
+    const auditDiv = document.getElementById('advancedAuditLog');
+    if (!auditDiv) return;
+    
+    if (auditLog.length === 0) {
+        auditDiv.innerHTML = '<div class="audit-loading">No audit entries match the current filters.</div>';
+        return;
+    }
+    
+    auditDiv.innerHTML = auditLog.map(entry => {
+        const icon = window.advancedAudit.logCategories[entry.category] || '📝';
+        const levelClass = `audit-level-${entry.level.toLowerCase()}`;
+        
+        return `
+            <div class="advanced-audit-entry ${levelClass}" data-category="${entry.category}">
+                <div class="audit-header">
+                    <span class="audit-icon">${icon}</span>
+                    <span class="audit-category">[${entry.category}]</span>
+                    <span class="audit-level">${entry.level}</span>
+                    <span class="audit-time">${entry.relativeTime}</span>
+                    <span class="audit-timestamp">${new Date(entry.timestamp).toLocaleString()}</span>
+                </div>
+                <div class="audit-message">${escapeHtml(entry.message)}</div>
+                ${Object.keys(entry.details).length > 0 ? `
+                    <details class="audit-details">
+                        <summary>📋 Details (${Object.keys(entry.details).length} items)</summary>
+                        <pre class="audit-details-content">${escapeHtml(JSON.stringify(entry.details, null, 2))}</pre>
+                    </details>
+                ` : ''}
+                ${entry.stackTrace && entry.level === 'ERROR' ? `
+                    <details class="audit-stack">
+                        <summary>🔍 Stack Trace</summary>
+                        <pre class="audit-stack-content">${escapeHtml(entry.stackTrace)}</pre>
+                    </details>
+                ` : ''}
+                ${entry.performance ? `
+                    <details class="audit-details">
+                        <summary>⚡ Performance Snapshot</summary>
+                        <pre class="audit-details-content">${escapeHtml(JSON.stringify(entry.performance, null, 2))}</pre>
+                    </details>
+                ` : ''}
+            </div>
+        `;
+    }).join('');
+}
+
+function refreshAdvancedAudit() {
+    window.advancedAudit.updateAdvancedAuditDisplay();
+    window.advancedAudit.logUI('INFO', 'Advanced audit log refreshed');
+}
+
+function exportAdvancedAudit() {
+    window.advancedAudit.exportAuditLog();
+}
+
+function clearAdvancedAudit() {
+    if (confirm('⚠️ This will clear the entire advanced audit log. This action cannot be undone. Continue?')) {
+        window.advancedAudit.clearAuditLog();
+        window.advancedAudit.logSecurity('WARN', 'Advanced audit log cleared by user', {
+            action: 'AUDIT_CLEAR',
+            userAgent: navigator.userAgent,
+            timestamp: new Date().toISOString()
+        });
+    }
+}
+
+function showAuditSummary() {
+    const summaryDiv = document.getElementById('auditSummary');
+    const isHidden = summaryDiv.style.display === 'none';
+    
+    if (isHidden) {
+        const summary = window.advancedAudit.getSystemSummary();
+        
+        summaryDiv.innerHTML = `
+            <h4>📊 System Audit Summary</h4>
+            <div class="audit-summary-grid">
+                <div class="audit-summary-item">
+                    <span class="number">${summary.totalEntries}</span>
+                    <span class="label">Total Entries</span>
+                </div>
+                <div class="audit-summary-item">
+                    <span class="number">${summary.entriesLastHour}</span>
+                    <span class="label">Last Hour</span>
+                </div>
+                <div class="audit-summary-item">
+                    <span class="number">${summary.errorCount}</span>
+                    <span class="label">Total Errors</span>
+                </div>
+                <div class="audit-summary-item">
+                    <span class="number">${Object.keys(summary.categories).length}</span>
+                    <span class="label">Categories Active</span>
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px;">
+                <strong>📁 Category Breakdown:</strong><br>
+                ${Object.entries(summary.categories).map(([cat, count]) => 
+                    `${window.advancedAudit.logCategories[cat] || '📝'} ${cat}: ${count}`
+                ).join(' | ')}
+            </div>
+            
+            ${summary.topErrors.length > 0 ? `
+                <div style="margin-top: 15px;">
+                    <strong>⚠️ Top Errors:</strong><br>
+                    ${summary.topErrors.map(([error, data]) => 
+                        `• ${error}: ${data.count} occurrences`
+                    ).join('<br>')}
+                </div>
+            ` : ''}
+        `;
+        
+        summaryDiv.style.display = 'block';
+        window.advancedAudit.logUI('INFO', 'Audit summary displayed', summary);
+    } else {
+        summaryDiv.style.display = 'none';
+        window.advancedAudit.logUI('DEBUG', 'Audit summary hidden');
+    }
+}
+
+</script>
+</body>
+</html>
