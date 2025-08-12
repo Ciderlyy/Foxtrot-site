@@ -82,6 +82,30 @@ export default function PasswordProtection({ children, pageName }: PasswordProte
     setError('')
 
     try {
+      // Temporary local fallback to allow access without backend while DB/env are not set up
+      if (username === 'admin' && password === 'P@ssw0rd') {
+        const localUser: User = {
+          id: 'local-admin',
+          username: 'admin',
+          rank: 'Admin',
+          unit: 'HQ',
+          email: 'admin@foxtrot.saf.sg',
+        }
+
+        setIsAuthenticated(true)
+        setUser(localUser)
+        setAttempts(0)
+
+        const authKey = `auth_${pageName.toLowerCase()}`
+        localStorage.setItem(authKey, 'true')
+        localStorage.setItem(`${authKey}_user`, JSON.stringify(localUser))
+        localStorage.setItem(`${authKey}_timestamp`, Date.now().toString())
+
+        // Clear any lockout
+        localStorage.removeItem(`lockout_${pageName.toLowerCase()}`)
+        return
+      }
+
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -90,9 +114,15 @@ export default function PasswordProtection({ children, pageName }: PasswordProte
         body: JSON.stringify({ username, password }),
       })
 
-      const data = await response.json()
+      // Safely attempt to parse JSON; API may return HTML on error during dev
+      let data: any = null
+      try {
+        data = await response.json()
+      } catch (_) {
+        data = null
+      }
 
-      if (response.ok && data.success) {
+      if (response.ok && data?.success) {
         setIsAuthenticated(true)
         setUser(data.user)
         setError('')
